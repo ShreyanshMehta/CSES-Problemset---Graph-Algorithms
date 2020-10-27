@@ -1,0 +1,75 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+#define   fi(a,b) for(int i=a;i<b;i++)
+#define   fj(a,b) for(int j=a;j<b;j++)
+#define   ff first
+#define   ss second
+#define   ll long long
+#define   ld long double
+#define   ull unsigned long long
+#define   bp(x) __builtin_popcount(x)
+#define   pr(x) for(auto it: x) cout<<it<<" "; cout<<endl;
+#define   getMax(x) max_element(x.begin(),x.end())
+#define   getMin(x) min_element(x.begin(),x.end())
+#define   endl "\n"
+typedef   vector<int> vi;
+typedef   vector< pair<int,int> > vii;
+typedef   vector<long long> vl;
+typedef   pair<int,int> pii;
+typedef   pair<ll,ll> pll;
+typedef   vector< pair<ll,ll> > vll;
+//int dx[]={1,0,-1,0};
+//int dy[]={0,1,0,-1};
+//int dx[]={-1,0,1,1,1,0,-1,-1};
+//int dy[]={-1,-1,-1,0,1,1,1,0};
+
+void nikal_pehli_fursat_mai(){
+    ll n, m, q;
+    cin>>n>>m>>q;
+
+    vector<vector<ll>>adjM(n, vl(n, 1e18));
+
+    fi(0, m){
+        ll u, v, w;
+        cin>>u>>v>>w;
+        u--; v--;
+        adjM[u][v] = min(adjM[u][v], w);
+        adjM[v][u] = min(adjM[v][u], w);
+    }
+
+    fi(0, n) adjM[i][i] = 0;
+
+    
+    for(int k=0;k<n;k++){
+        fi(0, n){
+            fj(0, n){
+                adjM[i][j] = min(adjM[i][j], adjM[i][k] + adjM[k][j]);
+                // adjM[j][i] = adjM[i][j];
+            }
+        }
+    }
+
+    while(q--){
+        int u,v;
+        cin>>u>>v;
+        u--; v--;
+        if(adjM[u][v]==1e18) cout<<-1<<endl;
+        else cout<<adjM[u][v]<<endl;
+    }
+
+}
+
+int main(){
+    #ifndef ONLINE_JUDGE
+    freopen("input.txt", "r", stdin);
+    freopen("output.txt", "w", stdout);
+    #endif
+    ios::sync_with_stdio(0);
+    cin.tie(0);
+    int tc=1; 
+    // cin>>tc;
+    while(tc--){
+    nikal_pehli_fursat_mai();
+    }
+}
