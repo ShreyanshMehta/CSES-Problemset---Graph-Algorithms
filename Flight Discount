@@ -1,0 +1,92 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+#define   fi(a,b) for(int i=a;i<b;i++)
+#define   fj(a,b) for(int j=a;j<b;j++)
+#define   ff first
+#define   ss second
+#define   ll long long
+#define   ld long double
+#define   ull unsigned long long
+#define   bp(x) __builtin_popcount(x)
+#define   pr(x) for(auto it: x) cout<<it<<" "; cout<<endl;
+#define   getMax(x) max_element(x.begin(),x.end())
+#define   getMin(x) min_element(x.begin(),x.end())
+#define   endl "\n"
+typedef   vector<int> vi;
+typedef   vector< pair<int,int> > vii;
+typedef   vector<long long> vl;
+typedef   pair<int,int> pii;
+typedef   pair<ll,ll> pll;
+typedef   vector< pair<ll,ll> > vll;
+//int dx[]={1,0,-1,0};
+//int dy[]={0,1,0,-1};
+//int dx[]={-1,0,1,1,1,0,-1,-1};
+//int dy[]={-1,-1,-1,0,1,1,1,0};
+
+void bfs(int node, int n, vl &dis, vector<vii>adj){
+    fi(0, n) dis[i] = 1e18;
+    vector<bool>vis(n, 0);
+    dis[node] = 0;
+    priority_queue<pll, vector<pll>, greater<pll>>q;
+    q.push({0, node});
+
+    while(!q.empty()){
+        auto u = q.top().ss;
+        q.pop();
+        if(vis[u]) continue;
+        vis[u] = 1;
+        for(auto it: adj[u]){
+            int v = it.ff;
+            if(dis[v] > dis[u]+(ll)it.ss){
+                dis[v] = dis[u]+(ll)it.ss;
+                q.push({dis[v], v});
+            }
+        }
+    }
+}
+
+void nikal_pehli_fursat_mai(){
+    int n, m;
+    cin>>n>>m;
+
+    vector<vii>adj1(n), adj2(n);
+
+    fi(0, m){
+        int u, v, w;
+        cin>>u>>v>>w;
+        u--; v--;
+        adj1[u].push_back({v, w});
+        adj2[v].push_back({u, w});
+    }
+
+    vl dis1(n), dis2(n);
+
+    bfs(0, n, dis1, adj1);
+    bfs(n-1, n, dis2, adj2);
+
+    ll ans = 1e18;
+
+    fi(0, n){
+        for(auto it: adj1[i]){
+            int u = i, v = it.ff;
+            ans = min(ans, dis1[u] + dis2[v] + (ll)it.ss/2);
+        }
+    }
+
+    cout<<ans<<endl;
+}
+
+int main(){
+    #ifndef ONLINE_JUDGE
+    freopen("input.txt", "r", stdin);
+    freopen("output.txt", "w", stdout);
+    #endif
+    ios::sync_with_stdio(0);
+    cin.tie(0);
+    int tc=1; 
+    // cin>>tc;
+    while(tc--){
+    nikal_pehli_fursat_mai();
+    }
+}
